@@ -78,3 +78,6 @@ void fillcircle(uint8_t *buff,
 uint8_t x0, uint8_t y0, uint8_t r,
 uint8_t color);
 
+void drawBorders(uint8_t color);
+void drawDiagonals(uint8_t color);
+void drawHomePage(uint8_t BLACK);

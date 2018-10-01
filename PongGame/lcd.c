@@ -496,44 +496,235 @@ void drawchar(uint8_t *buff, uint8_t x, uint8_t line, uint8_t c) {
 
 // the most basic function, set a single pixel
 void setpixel(uint8_t *buff, uint8_t x, uint8_t y, uint8_t color) {
-	
+	if(x < 128 || y < 64){
+		if(color == 0x000001){	//Since the GLCD is monochrome, we will write black color only else we clear the position.
+			buff[x + ((y/8)*128)] |= (color << (7 - (y % 8)));
+		}else{
+			buff[x + ((y/8)*128)] &= ~(color << (7 - (y % 8)));
+		}
+	}
 }
 
 // function to clear a single pixel
 void clearpixel(uint8_t *buff, uint8_t x, uint8_t y) {
-	
+	if(x < 128 || y < 64){
+		buff[x + ((y/8)*128) - 1] &= ~(1 << (7 - (y % 8)));
+	}
 }
 
 // function to write a string on the lcd
 void drawstring(uint8_t *buff, uint8_t x, uint8_t line, uint8_t *c) {
 	
+	while(c[0] != 0){
+		drawchar(buff,x,line,c[0]);
+		c++;
+		x+=5;
+		if(x+5 > 128){
+			line++;
+		}
+		if(line > 8){
+			line = 0;
+		}
+	}
 }
 
 // use bresenham's algorithm to write this function to draw a line
 void drawline(uint8_t *buff,uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1,uint8_t color) {
+	
+	 uint8_t delX; 
+	 uint8_t delY;
+	 uint8_t isRising = abs(y1 - y0) > abs(x1 - x0);
+	 if (isRising) {
+		 uint8_t temp = x0;
+		 x0 = y0;
+		 y0 = temp;
+		 temp = x1;
+		 x1 = y1;
+		 y1 = temp;
+	 }
 
+	 if (x0 > x1) {
+		 uint8_t temp = x0;
+		 x0 = x1;
+		 x1 = temp;
+		 
+		 temp = y0;
+		 y0 = y1;
+		 y1 = temp;
+	 }
+	 
+	 delX = x1 - x0;
+	 delY = abs(y1 - y0);
+
+	 int8_t error = delX / 2;
+	 int8_t incY;
+
+	 if (y0 < y1) {
+		 incY = 1;
+	 }
+	 else {
+		 incY = -1;
+	 }
+
+	 while(x0 < x1){
+		 if (isRising) {
+			 setpixel(buff, y0, x0, color);
+			 } else {
+			 setpixel(buff, x0, y0, color);
+		 }
+		 error -= delY;
+		 if (error < 0) {
+			 y0 += incY;
+			 error += delX;
+		 }
+	 x0++;
+	 }
 }
 
 // function to draw a filled rectangle
 void fillrect(uint8_t *buff,uint8_t x, uint8_t y, uint8_t w, uint8_t h,uint8_t color) {
-	
+	drawrect(buff,x,y,w,h,color);
+	for(int i = y+1; i< y+h; i++){
+		for(int j = x+1; j< x+w; j++){
+			setpixel(buff,j,i,color);	
+		}
+		
+	}
 }
 
 
 // function to draw a rectangle
 void drawrect(uint8_t *buff,uint8_t x, uint8_t y, uint8_t w, uint8_t h,uint8_t color) {
+	drawline(buff, x, y, x+w, y, color);
+	drawline(buff, x+w, y, x+w , y+h , color);
+	drawline(buff, x+w, y+h,x, y+h,color);
+	drawline(buff, x, y+h,x,y,color);
+	
 	
 }
 
-
+//Taken From Wikipedia Bresenhams Algorithm.
 // function to draw a circle
 void drawcircle(uint8_t *buff,uint8_t x0, uint8_t y0, uint8_t r,uint8_t color) {
+	  
+	  int x = r-1;
+	  int y = 0;
+	  int dx = 1;
+	  int dy = 1;
+	  int err = dx - (r << 1);
+
+	   while (x >= y)
+	   {
+		   
+		   setpixel(buff,x0 + x, y0 + y,color);
+		   setpixel(buff,x0 - x, y0 - y,color);
+		   
+		   
+		   setpixel(buff,x0 + y, y0 + x,color);
+		   setpixel(buff,x0 - y, y0 - x,color);
+		   
+		   
+		   setpixel(buff,x0 - y, y0 + x,color);
+		   setpixel(buff,x0 + y, y0 - x,color);
+		   
+		   
+		   setpixel(buff,x0 - x, y0 + y,color);
+		   setpixel(buff,x0 + x, y0 - y,color);
+		   
 	
+		   
+		   
+
+		   if (err <= 0)
+		   {
+			   y++;
+			   err += dy;
+			   dy += 2;
+		   }
+		   
+		   if (err > 0)
+		   {
+			   x--;
+			   dx += 2;
+			   err += dx - (r << 1);
+		   }
+	   }
 }
 
 
 // function to draw a filled circle
 void fillcircle(uint8_t *buff,uint8_t x0, uint8_t y0, uint8_t r,uint8_t color) {
-	
+	/*while(r > 0){
+		drawcircle(buff,x0,y0,r,color);
+		r--;
+	}*/
+		  int x = r-1;
+		  int y = 0;
+		  int dx = 1;
+		  int dy = 1;
+		  int err = dx - (r << 1);
+
+		  while (x >= y)
+		  {
+			  //setpixel(buff,x0 + x, y0 + y,color);
+			  //setpixel(buff,x0 - x, y0 - y,color);
+			  drawline(buff,x0+x,y0+y,x0-x,y0-y,color);
+			  
+			  //setpixel(buff,x0 + y, y0 + x,color);
+			  //setpixel(buff,x0 - y, y0 - x,color);
+			  drawline(buff, x0+y,y0+x,x0-y,y0-x,color);
+			  
+			  //setpixel(buff,x0 - y, y0 + x,color);
+			  //setpixel(buff,x0 + y, y0 - x,color);
+			  drawline(buff,x0-y,y0+x,x0+y,y0-x,color);
+			  
+			  //setpixel(buff,x0 - x, y0 + y,color);
+			  //setpixel(buff,x0 + x, y0 - y,color);
+			  drawline(buff,x0-x,y0+y,x0+x,y0-y,color);
+			  
+			  if (err <= 0)
+			  {
+				  y++;
+				  err += dy;
+				  dy += 2;
+			  }
+			  
+			  if (err > 0)
+			  {
+				  x--;
+				  dx += 2;
+				  err += dx - (r << 1);
+			  }
+		  }
 }
 
+
+void drawBorders(uint8_t color){
+	drawline(buff, 0,0,127,0, color);
+	drawline(buff, 0,0,0,63, color);
+	drawline(buff, 0,63,127,63, color);
+	drawline(buff, 127,63,127,0, color);
+}
+
+void drawDiagonals(uint8_t color){
+	drawline(buff, 0,0,127,63, color);
+	drawline(buff, 0,64,127,0, color);
+}
+
+void drawHomePage(uint8_t BLACK){
+	drawBorders(BLACK);
+	drawstring(buff,35,0,"Lets Play!!!");
+	//fillrect(buff,12,5,80,40,BLACK);
+	drawcircle(buff,64,32,20,BLACK);
+	//mouth
+	drawcircle(buff,64,40,7,BLACK);
+	//eye left
+	drawcircle(buff,56,23,5,BLACK);
+	fillcircle(buff,56,23,3,BLACK);
+	//eye right
+	drawcircle(buff,72,23,5,BLACK);
+	fillcircle(buff,72,23,3,BLACK);
+	
+	drawrect(buff,6,15,5,33,BLACK);
+	drawrect(buff,115,15,5,33,BLACK);
+}
