@@ -496,6 +496,8 @@ void drawchar(uint8_t *buff, uint8_t x, uint8_t line, uint8_t c) {
 
 // the most basic function, set a single pixel
 void setpixel(uint8_t *buff, uint8_t x, uint8_t y, uint8_t color) {
+
+   uint8_t bte = x + y/8 * 128 -1;
 	
 }
 
