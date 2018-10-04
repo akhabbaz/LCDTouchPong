@@ -493,15 +493,18 @@ void drawchar(uint8_t *buff, uint8_t x, uint8_t line, uint8_t c) {
 // the most basic function, set a single pixel
 void setpixel(uint8_t *buff, uint8_t x, uint8_t y, uint8_t color) {
 
-   uint8_t bte = x + y/8 * 128;
+   uint8_t bte = x + y / 8 * 128;
    uint8_t shift = y % 8;
+   shift = 8 - shift;
+   buff[bte] = (1 << 7);
+   buff[bte] |= (1 << 0);
    if (color)
    {
-		buff[bte] |= _BV(shift);
+	//buff[bte] |= _BV(shift);
    }
    else {
-		buff[bte] &= ~_BV(shift);
-      }
+	 //buff[bte] &= ~_BV(shift);
+   }
 }
 
 // function to clear a single pixel

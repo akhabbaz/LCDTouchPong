@@ -1,5 +1,6 @@
 
 #include "lcd.h"
+#include "uart.h"
 
 //#define FREQ 16000000
 //#define BAUD 9600
@@ -30,15 +31,21 @@ int main(void)
 	clear_buffer(buff);
 	uint8_t  chloc = 0;
 	uint8_t  line = 0;
+	uint8_t xloc = 0;
+	uint8_t yloc = 0;
 	while (1)
 	{
 		drawchar(buff,8,0,displayChar);
 		drawchar(buff,0,1,displayChar);
 		write_buffer(buff);
 		_delay_ms(2000);
-		setpixel(buff,   0,  0, BLACK);
-        setpixel(buff, 127, 63, BLACK);
+		setpixel(buff,   xloc, yloc  , BLACK);
+		if (xloc + 8 > 128){
+			yloc = (yloc + 8) %64;
+		}
+		xloc = (xloc + 8) % 128;
 		displayChar++;
+		printf("hello");
 	}
 }
 
