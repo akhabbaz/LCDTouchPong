@@ -1,11 +1,4 @@
-#define F_CPU 16000000L
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <util/delay.h>
+
 #include "lcd.h"
 
 //#define FREQ 16000000
@@ -13,7 +6,7 @@
 //#define HIGH 1
 //#define LOW 0
 //#define BUFFER 1024
-//#define BLACK 0x000001
+ #define BLACK 0x000001
 
 char displayChar = 0;
 
@@ -39,9 +32,12 @@ int main(void)
 	uint8_t  line = 0;
 	while (1)
 	{
-		drawchar(buff,0,0,displayChar);
+		drawchar(buff,8,0,displayChar);
+		drawchar(buff,0,1,displayChar);
 		write_buffer(buff);
-		_delay_ms(5000);
+		_delay_ms(2000);
+		setpixel(buff,   0,  0, BLACK);
+        setpixel(buff, 127, 63, BLACK);
 		displayChar++;
 	}
 }

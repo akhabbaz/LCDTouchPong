@@ -1,3 +1,13 @@
+#define F_CPU 16000000L
+#include <avr/interrupt.h>
+#include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <util/delay.h>
+
+
 
 #define CMD_DISPLAY_OFF   0xAE
 #define CMD_DISPLAY_ON    0xAF
