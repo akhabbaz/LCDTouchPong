@@ -506,7 +506,7 @@ void setpixel(uint8_t *buff, uint8_t x, uint8_t y, uint8_t color) {
 // function to clear a single pixel
 void clearpixel(uint8_t *buff, uint8_t x, uint8_t y) {
 	if(x < 128 || y < 64){
-		buff[x + ((y/8)*128) - 1] &= ~(1 << (7 - (y % 8)));
+		buff[x + ((y/8)*128)] &= ~(1 << (7 - (y % 8)));
 	}
 }
 

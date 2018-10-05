@@ -43,9 +43,9 @@ int main(void)
 		//drawchar(buff,0,0,displayChar);	
 		//drawDiagonals(BLACK);
 		drawHomePage(BLACK);	
-		//readXPosition();
-		//readYPosition();
-		//printf("\n X Position:%u, \t Y Position:%u",touchX, touchY);
+		uint16_t xpos = readXPosition();
+		uint16_t ypos = readYPosition();
+		printf(" X Position:%u, \t Y Position:%u\n",xpos, ypos);
 		printf("Hello");
 		_delay_ms(1000);
 	}
