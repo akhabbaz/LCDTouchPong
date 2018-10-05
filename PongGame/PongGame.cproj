@@ -120,6 +120,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="adc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="adc.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="lcd.c">
       <SubType>compile</SubType>
     </Compile>
@@ -127,6 +133,15 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="setFreq.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UART.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UART.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

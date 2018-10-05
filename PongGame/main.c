@@ -1,16 +1,8 @@
-#define F_CPU 16000000
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <util/delay.h>
+
 
 
 #include "lcd.h"
-#include "adc.h"
-#include "UART.h"
+
 
 #define FREQ 16000000
 #define BAUD 9600
@@ -45,16 +37,16 @@ int main(void)
 	write_buffer(buff);
 	_delay_ms(10000);
 	clear_buffer(buff);
-	adc_init();
+//	adc_init();
 	while (1)
 	{
 		//drawchar(buff,0,0,displayChar);	
 		//drawDiagonals(BLACK);
 		drawHomePage(BLACK);	
-		readXPosition();
-		readYPosition();
-		printf("\n X Position:%u, \t Y Position:%u",touchX, touchY);
-		
+		//readXPosition();
+		//readYPosition();
+		//printf("\n X Position:%u, \t Y Position:%u",touchX, touchY);
+		printf("Hello");
 		_delay_ms(1000);
 	}
 }

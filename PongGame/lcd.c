@@ -1,9 +1,7 @@
-#include <avr/io.h>
-#include <stdlib.h>
-#include <string.h>
-#include <util/delay.h>
-#include <avr/pgmspace.h>
 #include "lcd.h"
+
+#include <avr/pgmspace.h>
+
 
 #define SID_DDR DDRD
 #define SID_PIN PIND
