@@ -3,14 +3,22 @@
 #include <string.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
+#include <avr/interrupt.h>
 #include "adc.h"
-
-
+uint16_t adcval;
+uint8_t currentChannel;
+ISR(ADC_vect)
+{ 
+	adcval = ADC;
+	adc_read(MUX0);
+}
 
 void adc_init(){
         ADMUX = 0;
 	ADMUX = (1<<REFS0); // should use external capacitor on ARef
 	ADCSRA |= (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN); // enable ADC and set rate to 1/128
+	ADCSRA |= (1 << ADIE);
+	sei(); // enable interupts
 	ADCSRB |= 0x00; // free running
 	DDRC = 0x0;  // initialize to read
 	printf("ADCSRA %02x\n ADCSRB %02x\nADCMUX %02x\n", ADCSRA, ADCSRB, ADMUX);
@@ -20,8 +28,9 @@ uint16_t adc_read(uint8_t ADCchannel){	//1110
 	ADCchannel &= 0x07; // zero out high bits
 	ADMUX = (ADMUX & 0xF8) | ADCchannel; //00000011 & 00001111 => 00000011
 	ADCSRA |= (1<<ADSC);
-	while (ADCSRA & (1<<ADSC));
-	return ADC;
+	//while ( !(ADCSRA & (1 << ADIF))) 
+	//while (ADCSRA & (1<<ADSC));
+	return 0;
 }
 
 uint16_t readXPosition(){

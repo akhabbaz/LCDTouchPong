@@ -38,15 +38,19 @@ int main(void)
 	_delay_ms(10000);
 	clear_buffer(buff);
 	adc_init();
+	uint16_t xpos = readXPosition();
+
 	while (1)
 	{
 		//drawchar(buff,0,0,displayChar);	
 		//drawDiagonals(BLACK);
-		drawHomePage(BLACK);	
-		uint16_t xpos = readXPosition();
-		uint16_t ypos = readYPosition();
-		uint16_t accel = adc_read(1 << MUX2);
-		printf(" X Position:%u, \t Y Position:%u \t accel: %u\n",xpos, ypos, accel);
+		//drawHomePage(BLACK)
+		
+		//uint16_t ypos = readYPosition();
+		//uint16_t accel = adc_read(1 << MUX2);
+		//printf(" X Position:%u, \t Y Position:%u \t accel: %u\n",xpos, ypos, accel);
+		printf("adcval %u\n", adcval);
+		drawcircle(buff, 64, 32, 10,BLACK);
 		_delay_ms(1000);
 	}
 }
